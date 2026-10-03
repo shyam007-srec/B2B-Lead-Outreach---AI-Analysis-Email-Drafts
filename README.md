@@ -3,6 +3,7 @@
 # 🤖 B2B Lead Outreach AI Automation
 
 ### AI-powered lead research, website analysis & personalized outreach — fully automated with n8n
+<img width="706" height="246" alt="image" src="https://github.com/user-attachments/assets/d5e6121d-dca8-4b97-b283-813752c33201" />
 
 <p>
   <img src="https://img.shields.io/badge/n8n-Automation-EA4B71?style=for-the-badge&logo=n8n&logoColor=white" alt="n8n"/>
