@@ -1,0 +1,3768 @@
+{
+  "name": "B2B Lead Outreach - AI Analysis & Email Drafts",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d20289fa-27a4-4445-8474-f7c3829f51c5",
+      "name": "01 - Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblHOsYfcKQstvFss",
+          "mode": "list",
+          "cachedResultName": "Data",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblHOsYfcKQstvFss"
+        },
+        "filterByFormula": "AND({website}!=\"\", {Analysis Status}!=\"Email Generated\", {Analysis Status}!=\"Analyzed\")",
+        "options": {}
+      },
+      "id": "82e163f0-03da-4aaf-a67d-78a37bf524f0",
+      "name": "02 - Get Companies - Data",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -976,
+        224
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 15,
+              "unit": "minutes"
+            }
+          ]
+        },
+        "authentication": "airtableOAuth2Api",
+        "baseId": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "id"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "tblwKqQoz06ZXwa0R",
+          "mode": "id"
+        },
+        "triggerField": "title",
+        "additionalFields": {}
+      },
+      "id": "9b4e3f6f-8763-4482-a0b7-61442c06a565",
+      "name": "00a - New Company (Data)",
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1424,
+        320
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 1,
+              "unit": "minutes"
+            }
+          ]
+        },
+        "authentication": "airtableOAuth2Api",
+        "baseId": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "id"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "tblwKqQoz06ZXwa0R",
+          "mode": "id"
+        },
+        "triggerField": "Last Modified Time",
+        "downloadAttachments": true,
+        "downloadFieldNames": "Last Modified Time",
+        "additionalFields": {
+          "fields": "Last Modified Time",
+          "formula": "{emailVerification} = TRUE()"
+        }
+      },
+      "id": "fc777a3c-9988-4771-9392-c8876ed40346",
+      "name": "00b - Verified Contact (Data2)",
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1424,
+        512
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "has-website",
+              "leftValue": "={{ $json.fields.website }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "70c75d4f-cdee-4e08-bf8a-ccadce245052",
+      "name": "03 - Filter Valid Companies",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -752,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblwKqQoz06ZXwa0R",
+          "mode": "list",
+          "cachedResultName": "Data2",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblwKqQoz06ZXwa0R"
+        },
+        "options": {}
+      },
+      "id": "fc915c5d-0382-4371-a0f4-beecac16e9a5",
+      "name": "04 - Get Contacts - Data2",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -528,
+        224
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblZ2McIdL3VrhmLC",
+          "mode": "list",
+          "cachedResultName": "Email Messages",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblZ2McIdL3VrhmLC"
+        },
+        "options": {}
+      },
+      "id": "aacc174e-24ae-4b13-8ec9-8f86830b7a87",
+      "name": "E1 - Existing Emails",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -528,
+        416
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblSaVVJRsxbSTcfI",
+          "mode": "list",
+          "cachedResultName": "Website Analysis",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblSaVVJRsxbSTcfI"
+        },
+        "options": {}
+      },
+      "id": "0c9f4154-ab14-4935-9580-bd4525f3b081",
+      "name": "E2 - Existing Analyses",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        320
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "r-full",
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "full",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Full Analysis "
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "r-skip",
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "skip",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Already Processed"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "r-noc",
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "no_contacts",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "No Verified Contacts"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fe2b9f0f-b5c8-46dc-ae4c-1a58c7866a5c",
+      "name": "07 - Route Company",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        144,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.recipientEmails }}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 15000
+        }
+      },
+      "id": "5bb16212-96cb-47e8-8d7a-2cc10e0e5e1d",
+      "name": "08 - Fetch Website",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        368,
+        128
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const company = $('08 - Fetch Website').item.json;\nconst html = ($json.data || '') + '';\nlet status = 'OK';\nif(!html || html.length < 200){ status = 'Error'; }\n\nlet clean = html\n  .replace(/<script[\\s\\S]*?<\\/script>/gi,' ')\n  .replace(/<style[\\s\\S]*?<\\/style>/gi,' ')\n  .replace(/<svg[\\s\\S]*?<\\/svg>/gi,' ')\n  .replace(/<noscript[\\s\\S]*?<\\/noscript>/gi,' ')\n  .replace(/<!--[\\s\\S]*?-->/g,' ');\n\nconst titleMatch = clean.match(/<title[^>]*>([\\s\\S]*?)<\\/title>/i);\nconst pageTitle = titleMatch ? titleMatch[1].replace(/\\s+/g,' ').trim() : '';\n\nconst metaMatch = clean.match(/<meta[^>]+name=[\"']description[\"'][^>]*content=[\"']([^\"']*)[\"']/i);\nconst metaDescription = metaMatch ? metaMatch[1].trim() : '';\n\nfunction collect(re){ \n  const res=[]; \n  let m; \n  while((m=re.exec(clean))!==null){ \n    const t=m[1].replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ').trim(); \n    if(t) res.push(t); \n  } \n  return res; \n}\n\n// Collects all headings without artificial limits\nconst h1 = collect(/<h1[^>]*>([\\s\\S]*?)<\\/h1>/gi);\nconst h2 = collect(/<h2[^>]*>([\\s\\S]*?)<\\/h2>/gi);\nconst h3 = collect(/<h3[^>]*>([\\s\\S]*?)<\\/h3>/gi);\n\n// Collects all links (removed the 15-link ceiling)\nconst links = [];\nconst lr = /<a[^>]+href=[\"']([^\"']+)[\"'][^>]*>([\\s\\S]*?)<\\/a>/gi;\nlet lm;\nwhile((lm = lr.exec(clean)) !== null){\n  const txt = lm[2].replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ').trim();\n  if(txt) links.push(txt + ' -> ' + lm[1]);\n}\n\n// Extracts full body text (removed the 4000 character limit)\nlet text = clean.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\\s+/g,' ').trim();\n\nconst analysisId = (company.company || 'company').replace(/[^a-zA-Z0-9]+/g,'-').toLowerCase() + '-' + Date.now();\n\nreturn { json: Object.assign({}, company, {\n  websiteStatus: status,\n  analysisId: analysisId,\n  pageTitle: pageTitle,\n  metaDescription: metaDescription,\n  h1: h1, h2: h2, h3: h3,\n  importantLinks: links,\n  cleanedContent: text\n}) };"
+      },
+      "id": "14768f04-f38d-462c-9c1f-8e61beb9584f",
+      "name": "09 - Extract Website Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={\n  \"system_prompt\": \"You are a senior Business Development Director and Technical Solutions Architect specializing in digital transformation, custom software development, AI automation, and CRM integrations.\\n\\nYour task is to analyze a company based on its metadata and scraped website content, then formulate a highly targeted, high-converting service proposal.\\n\\n### INPUT DATA\\nCompany Name: {{ $json.company }}\\nIndustry/Category: {{ $json.category }}\\nLocation: {{ $json.city }}, {{ $json.state }}\\nGoogle Rating: {{ $json.rating }} ({{ $json.reviews }} reviews)\\nWebsite URL: {{ $json.website }}\\nWebsite Fetch Status: {{ $json.websiteStatus }}\\nPage Title: {{ $json.pageTitle }}\\nMeta Description: {{ $json.metaDescription }}\\nHeaders (H1/H2/H3): {{ $json.h1 }} | {{ $json.h2 }} | {{ $json.h3 }}\\nImportant Links: {{ $json.importantLinks }}\\nWebsite Content: {{ $json.cleanedContent }}\\n\\n### ANALYSIS REQUIREMENTS\\nPerform a deep analysis across 4 key pillars:\\n\\n1. BUSINESS PROFILE & STATUS\\n- Core business model, primary target audience, and main value proposition.\\n- Website health evaluation (e.g., if fetch failed, site is missing, outdated, or lacks modern UX/lead capture).\\n\\n2. OPPORTUNITY IDENTIFICATION\\n- **AI & Process Automation**: Identify repetitive manual tasks, customer support gaps, booking friction, or missed lead follow-ups that an AI agent or automated workflow (e.g., n8n, Make) could fix.\\n- **Website & Web App Development**: Evaluate performance, UI/UX modernness, conversion rate optimization (CRO), custom portal needs, or mobile responsiveness.\\n- **CRM & Lead Management**: Identify potential gaps in lead tracking, pipeline automation, SMS/email nurture sequences, or database syncing.\\n\\n3. CUSTOMER TRUST & LOCAL REPUTATION\\n- Analyze their Google rating and review count. Detail how automation (like review request workflows or instant auto-responders) can help scale their local presence.\\n\\n4. TAILORED PITCH & VALUE PROPOSITION\\n- Draft a compelling, personalized cold email outline highlighting 2-3 high-impact, specific solutions tailored to their exact business type.\\n\\n### OUTPUT FORMAT\\nRespond STRICTLY with a valid JSON object using the following key structure:\\n\\n{\\n  \\\"companyName\\\": \\\"\\\",\\n  \\\"websiteHealth\\\": {\\n    \\\"status\\\": \\\"\\\",\\n    \\\"isOutdatedOrBroken\\\": false,\\n    \\\"keyDeficiencies\\\": []\\n  },\\n  \\\"painPoints\\\": [],\\n  \\\"serviceOpportunities\\\": {\\n    \\\"aiAutomation\\\": [],\\n    \\\"websiteDevelopment\\\": [],\\n    \\\"crmAndLeadManagement\\\": []\\n  },\\n  \\\"valuePropositionSummary\\\": \\\"\\\",\\n  \\\"recommendedOutreachEmail\\\": {\\n    \\\"subjectLine\\\": \\\"\\\",\\n    \\\"openingHook\\\": \\\"\\\",\\n    \\\"proposedSolutions\\\": [],\\n    \\\"callToAction\\\": \\\"\\\"\\n  }\\n}\",\n  \"instructions\": \"Pass your n8n variables directly into this system prompt within your LLM node (OpenAI, Anthropic, or Gemini) and ensure 'JSON Mode' or 'Structured Outputs' is enabled.\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "instructions": "{\n  \"system_prompt\": \"You are a B2B website and business analyst for a web design and digital services agency. Your task is to analyze companies based ONLY on the provided input data.\\n\\n### CRITICAL RULES:\\n1. STRICT EVIDENCE-BASED ANALYSIS: Do NOT invent problems, facts, or assumptions not supported by the input fields. Identify only reasonable opportunities supported directly by the evidence.\\n2. FETCH ERROR HANDLING: If the website fetch status is 'Error' or failed, assign conservative low-confidence scores (0-20) across performance metrics and explicitly note the fetch failure in the `analysisSummary`.\\n3. RECOMMENDED SERVICE: Choose exactly ONE primary `recommendedService` strictly from this list:\\n   - Website Redesign\\n   - Website Development\\n   - Landing Page Development\\n   - Local SEO\\n   - SEO\\n   - E-commerce Development\\n   - Website Performance Optimization\\n   - Conversion Optimization\\n   - CRM Integration\\n   - Business Automation\\n4. SCORE FORMAT: All scores MUST be integers from 0 to 100.\\n5. OUTPUT FORMAT: Respond ONLY with a raw, valid JSON object containing no markdown formatting or extra commentary outside the JSON.\\n\\n### INPUT DATA:\\nCompany: {{ $json.company }}\\nIndustry/Category: {{ $json.category }}\\nLocation: {{ $json.city }}, {{ $json.state }}\\nGoogle rating: {{ $json.rating }} ({{ $json.reviews }} reviews)\\nWebsite URL: {{ $json.website }}\\nWebsite fetch status: {{ $json.websiteStatus }}\\nPage title: {{ $json.pageTitle }}\\nMeta description: {{ $json.metaDescription }}\\nH1: {{ $json.h1 }}\\nH2: {{ $json.h2 }}\\nH3: {{ $json.h3 }}\\nImportant links: {{ $json.importantLinks }}\\nCleaned website content: {{ $json.cleanedContent }}\\n\\n### REQUIRED JSON OUTPUT SCHEMA:\\n{\\n  \\\"websiteScore\\\": 0,\\n  \\\"designScore\\\": 0,\\n  \\\"mobileScore\\\": 0,\\n  \\\"conversionScore\\\": 0,\\n  \\\"seoScore\\\": 0,\\n  \\\"mainProblems\\\": [\\n    \\\"Problem 1 directly derived from data\\\",\\n    \\\"Problem 2 directly derived from data\\\"\\n  ],\\n  \\\"businessOpportunity\\\": \\\"Clear opportunity based on data\\\",\\n  \\\"primaryPainPoint\\\": \\\"Core issue affecting lead capture or operations\\\",\\n  \\\"recommendedService\\\": \\\"Website Redesign\\\",\\n  \\\"secondaryService\\\": \\\"CRM Integration\\\",\\n  \\\"salesAngle\\\": \\\"Persuasive angle for cold outreach pitching the recommended service\\\",\\n  \\\"leadScore\\\": 0,\\n  \\\"analysisSummary\\\": \\\"Concise summary of findings, explicitly mentioning fetch errors if applicable.\\\"\\n}\"\n}",
+          "maxTokens": 1200,
+          "textFormat": {
+            "textOptions": {
+              "type": "json_object"
+            }
+          },
+          "temperature": 0.4
+        }
+      },
+      "id": "db6835d8-371f-4b45-905a-bddecf9bed01",
+      "name": "10 - AI Website Analysis",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        816,
+        128
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "Gateway credits",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblSaVVJRsxbSTcfI",
+          "mode": "list",
+          "cachedResultName": "Website Analysis",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblSaVVJRsxbSTcfI"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Analysis ID",
+              "displayName": "Analysis ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lead",
+              "displayName": "Lead",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Industry",
+              "displayName": "Industry",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Website Status",
+              "displayName": "Website Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Active",
+                  "value": "Active"
+                },
+                {
+                  "name": "Inactive",
+                  "value": "Inactive"
+                },
+                {
+                  "name": "Under Construction",
+                  "value": "Under Construction"
+                },
+                {
+                  "name": "Unknown",
+                  "value": "Unknown"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Website Score",
+              "displayName": "Website Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Design Score",
+              "displayName": "Design Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Mobile Score",
+              "displayName": "Mobile Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Conversion Score",
+              "displayName": "Conversion Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "SEO Score",
+              "displayName": "SEO Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Main Problems",
+              "displayName": "Main Problems",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Opportunities",
+              "displayName": "Opportunities",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recommended Service",
+              "displayName": "Recommended Service",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Secondary Service",
+              "displayName": "Secondary Service",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Primary Pain Point",
+              "displayName": "Primary Pain Point",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Sales Angle",
+              "displayName": "Sales Angle",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "AI Analysis",
+              "displayName": "AI Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Website improvement priority",
+              "displayName": "Website improvement priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Low",
+                  "value": "Low"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "High",
+                  "value": "High"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Analysis summary",
+              "displayName": "Analysis summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recommended follow-up action",
+              "displayName": "Recommended follow-up action",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Business Opportunities",
+              "displayName": "Business Opportunities",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email Messages",
+              "displayName": "Email Messages",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "id": "e23d1b25-c114-453c-ae38-52d142f9974a",
+      "name": "11 - Save Website Analysis",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1040,
+        128
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblZ2McIdL3VrhmLC",
+          "mode": "list",
+          "cachedResultName": "Email Messages",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblZ2McIdL3VrhmLC"
+        },
+        "filterByFormula": "={{ $('06 - Group, Dedup & Route').item.json.emailLookupFormula }}",
+        "options": {}
+      },
+      "id": "868a9922-d554-4ac8-b06f-b049995c02c9",
+      "name": "F1 - Recheck Existing Email",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1264,
+        320
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "function normTitle(s){ return (s||'').toString().toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().replace(/\\s+/g,' '); }\nconst existing = $('F1 - Recheck Existing Email').all();\nconst existingTitles = new Set();\nfor (const r of existing){\n  const f = (r.json && r.json.fields) ? r.json.fields : (r.json||{});\n  if(f && f.Company) existingTitles.add(normTitle(f.Company));\n}\nconst out = [];\nfor (const item of $input.all()){\n  const tkey = item.json.normTitle;\n  if(existingTitles.has(tkey)) continue;\n  out.push(item);\n}\nreturn out;"
+      },
+      "id": "eb628ffa-fb5d-4b70-b330-18cee955388e",
+      "name": "F2 - Final Duplicate Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Write ONE highly compelling, personalized cold outreach email for the target prospect based strictly on the provided company analysis data. \n\n### Context Data\n- Company Name: {{ $('09 - Extract Website Content').first().json.company }}\n- Industry: {{ $('09 - Extract Website Content').first().json.category }}\n- Website Findings: {{ $('10 - AI Website Analysis').first().json.output[0].content[0].text.analysisSummary }}\n- Key Problems Identified: {{ $('10 - AI Website Analysis').first().json.output[0].content[0].text.mainProblems }}\n- Primary Pain Point: {{ $('10 - AI Website Analysis').first().json.output[0].content[0].text.primaryPainPoint }}\n- Recommended Service: {{ $('10 - AI Website Analysis').first().json.output[0].content[0].text.recommendedService }}\n- Sales Angle: {{ $('10 - AI Website Analysis').first().json.output[0].content[0].text.salesAngle }}\n- Lead Score: {{ $('10 - AI Website Analysis').first().json.output[0].content[0].text.leadScore }}\n\n### Copywriting Rules & Tone Directives\n1. **Tone**: Natural, professional, concise, and helpful. Avoid overly formal jargon, generic greetings (\"I hope this email finds you well\"), or pushy buzzwords. Write like a knowledgeable peer.\n2. **Subject Line**: Create a brief, natural subject line (3–6 words) that feels direct and curiosity-driven (e.g., \"Quick question regarding [Company]\", \"Ideas for [Company]'s website\").\n3. **Structure**:\n   - **Hook**: Reference a specific observation from the website findings to prove this isn't a blast template.\n   - **Pain Point & Value**: Highlight the primary pain point directly, connecting it seamlessly to how the recommended service fixes it.\n   - **Call to Action (CTA)**: Use a low-friction, soft CTA (e.g., \"Worth a quick 5-minute chat this week?\", \"Open to seeing a quick preview?\").\n4. **Length**: Keep the total body short (under 120 words).\n\n### Output Requirements\nRespond ONLY with a valid JSON object. Do not include any introductory text, markdown wrappers, or markdown formatting outside the JSON code block.\n\nExpected JSON Structure:\n{\n  \"subject\": \"String\",\n  \"emailBody\": \"String\",\n  \"salesAngleUsed\": \"String\",\n  \"callToAction\": \"String\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "instructions": "{\n  \"system_prompt\": \"You are an expert B2B sales copywriter for a web design and digital services agency. Your task is to write ONE highly personalized, authentic outreach email for a prospect company based on the provided analysis data.\\n\\n### CRITICAL EMAIL CONSTRAINTS:\\n1. LENGTH: Exactly 100-150 words maximum.\\n2. ONE EMAIL PER COMPANY: Address the email to the company/team as a single entity, not separate contacts.\\n3. NO CLICHÉS: NEVER use lines like 'I hope this email finds you well', 'I stumbled upon your website', or generic compliments like 'You have a great business!'.\\n4. EVIDENCED OBSERVATION: Mention exactly ONE genuine observation or technical problem directly from the provided data.\\n5. SINGLE FOCUS: Focus strictly on the single primary `recommendedService`. Explain its direct business value (e.g., higher conversions, better lead handling, saved manual hours). Do not list multiple services.\\n6. NO HALLUCINATIONS: Do not invent facts, metrics, fake awards, or unverified problems.\\n7. SIMPLE CTA: End with one soft call to action designed to start a conversation (e.g., 'Open to seeing a quick 2-minute audit video?'), NOT a hard sell or demo booking.\\n8. OUTPUT FORMAT: Respond ONLY with a valid JSON object containing the keys `subject` and `body`.\\n\\n### INPUT DATA:\\nCompany: {{ $json.company }}\\nIndustry/Category: {{ $json.category }}\\nLocation: {{ $json.city }}, {{ $json.state }}\\nWebsite URL: {{ $json.website }}\\nWebsite Fetch Status: {{ $json.websiteStatus }}\\nMain Problems: {{ $json.mainProblems }}\\nPrimary Pain Point: {{ $json.primaryPainPoint }}\\nRecommended Service: {{ $json.recommendedService }}\\nSales Angle: {{ $json.salesAngle }}\\n\\n### REQUIRED JSON OUTPUT SCHEMA:\\n{\\n  \\\"subject\\\": \\\"Clear, low-friction subject line (3-6 words)\\\",\\n  \\\"body\\\": \\\"The personalized, human email copy (100-150 words)...\\\"\\n}\"\n}",
+          "maxTokens": 500,
+          "textFormat": {
+            "textOptions": {
+              "type": "json_object"
+            }
+          },
+          "temperature": 0.6
+        }
+      },
+      "id": "3704eb22-870c-4472-a861-eb2f64e41431",
+      "name": "12 - AI Email Generator",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        1264,
+        128
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "Gateway credits",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblZ2McIdL3VrhmLC",
+          "mode": "list",
+          "cachedResultName": "Email Messages",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblZ2McIdL3VrhmLC"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Company": "={{ $('07 - Route Company').item.json.company }}",
+            "Lead": "={{ $('07 - Route Company').item.json.company }}",
+            "Analysis": "={{ $('09 - Extract Website Content').first().json.analysisId }}",
+            "Recipient Email": "={{ $('09 - Extract Website Content').first().json.analysisId }}",
+            "Subject": "={{ $('12 - AI Email Generator').first().json.output[0].content[0].text.subject }}",
+            "Email Body": "={{ $('12 - AI Email Generator').first().json.output[0].content[0].text.body }}",
+            "Recommended Service": "={{ $('10 - AI Website Analysis').first().json.output[0].content[0].text.recommendedService }}",
+            "Lead Score": "={{ $('10 - AI Website Analysis').first().json.output[0].content[0].text.leadScore }}",
+            "Status": "Draft"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lead",
+              "displayName": "Lead",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Analysis",
+              "displayName": "Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recipient Email",
+              "displayName": "Recipient Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email Body",
+              "displayName": "Email Body",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recommended Service",
+              "displayName": "Recommended Service",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Draft",
+                  "value": "Draft"
+                },
+                {
+                  "name": "Sent",
+                  "value": "Sent"
+                },
+                {
+                  "name": "Scheduled",
+                  "value": "Scheduled"
+                },
+                {
+                  "name": "Failed",
+                  "value": "Failed"
+                },
+                {
+                  "name": "Opened",
+                  "value": "Opened"
+                },
+                {
+                  "name": "Clicked",
+                  "value": "Clicked"
+                },
+                {
+                  "name": "Bounced",
+                  "value": "Bounced"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Sent At",
+              "displayName": "Sent At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Follow-up Recommendations (AI)",
+              "displayName": "Follow-up Recommendations (AI)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Outcome Summary (AI)",
+              "displayName": "Outcome Summary (AI)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Response Quality (AI)",
+              "displayName": "Response Quality (AI)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "No Response",
+                  "value": "No Response"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "High",
+                  "value": "High"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "id": "f48e6a07-b0f7-42a2-bd0d-8394a91b55df",
+      "name": "13 - Save Email Draft",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        128
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "5c6a32f8-852c-4a25-879c-dabe4233edfa",
+      "name": "Already Processed - Skip",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        368,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblHOsYfcKQstvFss",
+          "mode": "list",
+          "cachedResultName": "Data",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblHOsYfcKQstvFss"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.recordId }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "totalScore",
+              "displayName": "totalScore",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "reviewsCount",
+              "displayName": "reviewsCount",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "street",
+              "displayName": "street",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Huai Khwang",
+                  "value": "Huai Khwang"
+                },
+                {
+                  "name": "Bang Rak",
+                  "value": "Bang Rak"
+                },
+                {
+                  "name": "Pathum Wan",
+                  "value": "Pathum Wan"
+                },
+                {
+                  "name": "Khlong Toei",
+                  "value": "Khlong Toei"
+                },
+                {
+                  "name": "Watthana",
+                  "value": "Watthana"
+                },
+                {
+                  "name": "Chatuchak",
+                  "value": "Chatuchak"
+                },
+                {
+                  "name": "Dusit District",
+                  "value": "Dusit District"
+                },
+                {
+                  "name": "Wang Thonglang",
+                  "value": "Wang Thonglang"
+                },
+                {
+                  "name": "Bang Na",
+                  "value": "Bang Na"
+                },
+                {
+                  "name": "Bangkok Noi",
+                  "value": "Bangkok Noi"
+                },
+                {
+                  "name": "ปทุมวัน",
+                  "value": "ปทุมวัน"
+                },
+                {
+                  "name": "Din Daeng",
+                  "value": "Din Daeng"
+                },
+                {
+                  "name": "เขต คลองด",
+                  "value": "เขต คลองด"
+                },
+                {
+                  "name": "Amphoe Mueng",
+                  "value": "Amphoe Mueng"
+                },
+                {
+                  "name": "Mueang Phuket District",
+                  "value": "Mueang Phuket District"
+                },
+                {
+                  "name": "อ.เมือง",
+                  "value": "อ.เมือง"
+                },
+                {
+                  "name": "เมือง",
+                  "value": "เมือง"
+                },
+                {
+                  "name": "Muang",
+                  "value": "Muang"
+                },
+                {
+                  "name": "อ.เมืองเชียงใหม่",
+                  "value": "อ.เมืองเชียงใหม่"
+                },
+                {
+                  "name": "Mueng",
+                  "value": "Mueng"
+                },
+                {
+                  "name": "Kathu District",
+                  "value": "Kathu District"
+                },
+                {
+                  "name": "Mueang Chiang Mai District",
+                  "value": "Mueang Chiang Mai District"
+                },
+                {
+                  "name": "Thalang District",
+                  "value": "Thalang District"
+                },
+                {
+                  "name": "Phuket",
+                  "value": "Phuket"
+                },
+                {
+                  "name": "Bang Kapi",
+                  "value": "Bang Kapi"
+                },
+                {
+                  "name": "Muang เมือง",
+                  "value": "Muang เมือง"
+                },
+                {
+                  "name": "New York",
+                  "value": "New York"
+                },
+                {
+                  "name": "Subdistrict",
+                  "value": "Subdistrict"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Bangkok",
+                  "value": "Bangkok"
+                },
+                {
+                  "name": "Chiang Mai",
+                  "value": "Chiang Mai"
+                },
+                {
+                  "name": "Phuket",
+                  "value": "Phuket"
+                },
+                {
+                  "name": "New York",
+                  "value": "New York"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "countryCode",
+              "displayName": "countryCode",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "TH",
+                  "value": "TH"
+                },
+                {
+                  "name": "US",
+                  "value": "US"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "website",
+              "displayName": "website",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/0",
+              "displayName": "categories/0",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Medical office",
+                  "value": "Medical office"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Plastic surgeon",
+                  "value": "Plastic surgeon"
+                },
+                {
+                  "name": "Dermatologist",
+                  "value": "Dermatologist"
+                },
+                {
+                  "name": "Doctor",
+                  "value": "Doctor"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Dental clinic",
+                  "value": "Dental clinic"
+                },
+                {
+                  "name": "Specialized clinic",
+                  "value": "Specialized clinic"
+                },
+                {
+                  "name": "Cosmetic surgeon",
+                  "value": "Cosmetic surgeon"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                },
+                {
+                  "name": "Dentist",
+                  "value": "Dentist"
+                },
+                {
+                  "name": "Cosmetic dentist",
+                  "value": "Cosmetic dentist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/1",
+              "displayName": "categories/1",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Bariatric surgeon",
+                  "value": "Bariatric surgeon"
+                },
+                {
+                  "name": "Cosmetic surgeon",
+                  "value": "Cosmetic surgeon"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Hospital",
+                  "value": "Hospital"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Dermatologist",
+                  "value": "Dermatologist"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                },
+                {
+                  "name": "Plastic surgeon",
+                  "value": "Plastic surgeon"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Cosmetic dentist",
+                  "value": "Cosmetic dentist"
+                },
+                {
+                  "name": "Beauty salon",
+                  "value": "Beauty salon"
+                },
+                {
+                  "name": "Laser hair removal service",
+                  "value": "Laser hair removal service"
+                },
+                {
+                  "name": "Facial spa",
+                  "value": "Facial spa"
+                },
+                {
+                  "name": "Hair removal service",
+                  "value": "Hair removal service"
+                },
+                {
+                  "name": "Anesthesiologist",
+                  "value": "Anesthesiologist"
+                },
+                {
+                  "name": "Esthetics service",
+                  "value": "Esthetics service"
+                },
+                {
+                  "name": "Physical therapy clinic",
+                  "value": "Physical therapy clinic"
+                },
+                {
+                  "name": "Doctor",
+                  "value": "Doctor"
+                },
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Wellness center",
+                  "value": "Wellness center"
+                },
+                {
+                  "name": "Denture care center",
+                  "value": "Denture care center"
+                },
+                {
+                  "name": "Medical spa",
+                  "value": "Medical spa"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/2",
+              "displayName": "categories/2",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Cardiovascular and thoracic surgeon",
+                  "value": "Cardiovascular and thoracic surgeon"
+                },
+                {
+                  "name": "Dermatologist",
+                  "value": "Dermatologist"
+                },
+                {
+                  "name": "Specialized hospital",
+                  "value": "Specialized hospital"
+                },
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Wellness center",
+                  "value": "Wellness center"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Laser hair removal service",
+                  "value": "Laser hair removal service"
+                },
+                {
+                  "name": "Hair removal service",
+                  "value": "Hair removal service"
+                },
+                {
+                  "name": "Dental implants periodontist",
+                  "value": "Dental implants periodontist"
+                },
+                {
+                  "name": "Doctor",
+                  "value": "Doctor"
+                },
+                {
+                  "name": "Weight loss service",
+                  "value": "Weight loss service"
+                },
+                {
+                  "name": "IV therapy service",
+                  "value": "IV therapy service"
+                },
+                {
+                  "name": "Dental implants provider",
+                  "value": "Dental implants provider"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                },
+                {
+                  "name": "Travel clinic",
+                  "value": "Travel clinic"
+                },
+                {
+                  "name": "Skin care products vending machine",
+                  "value": "Skin care products vending machine"
+                },
+                {
+                  "name": "Dental clinic",
+                  "value": "Dental clinic"
+                },
+                {
+                  "name": "Esthetics service",
+                  "value": "Esthetics service"
+                },
+                {
+                  "name": "Endodontist",
+                  "value": "Endodontist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/3",
+              "displayName": "categories/3",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Gastrointestinal surgeon",
+                  "value": "Gastrointestinal surgeon"
+                },
+                {
+                  "name": "Vascular surgeon",
+                  "value": "Vascular surgeon"
+                },
+                {
+                  "name": "Surgeon",
+                  "value": "Surgeon"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Laser hair removal service",
+                  "value": "Laser hair removal service"
+                },
+                {
+                  "name": "Dentist",
+                  "value": "Dentist"
+                },
+                {
+                  "name": "Wellness center",
+                  "value": "Wellness center"
+                },
+                {
+                  "name": "Medical Center",
+                  "value": "Medical Center"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Endodontist",
+                  "value": "Endodontist"
+                },
+                {
+                  "name": "Orthodontist",
+                  "value": "Orthodontist"
+                },
+                {
+                  "name": "Dental implants periodontist",
+                  "value": "Dental implants periodontist"
+                },
+                {
+                  "name": "Dental radiology",
+                  "value": "Dental radiology"
+                },
+                {
+                  "name": "Medical office",
+                  "value": "Medical office"
+                },
+                {
+                  "name": "Esthetics service",
+                  "value": "Esthetics service"
+                },
+                {
+                  "name": "Denture care center",
+                  "value": "Denture care center"
+                },
+                {
+                  "name": "Dental implants provider",
+                  "value": "Dental implants provider"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/4",
+              "displayName": "categories/4",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Hospital department",
+                  "value": "Hospital department"
+                },
+                {
+                  "name": "Weight loss service",
+                  "value": "Weight loss service"
+                },
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Medical Center",
+                  "value": "Medical Center"
+                },
+                {
+                  "name": "Endodontist",
+                  "value": "Endodontist"
+                },
+                {
+                  "name": "Denture care center",
+                  "value": "Denture care center"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Medical spa",
+                  "value": "Medical spa"
+                },
+                {
+                  "name": "Orthodontist",
+                  "value": "Orthodontist"
+                },
+                {
+                  "name": "Teeth whitening service",
+                  "value": "Teeth whitening service"
+                },
+                {
+                  "name": "Dentist",
+                  "value": "Dentist"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/5",
+              "displayName": "categories/5",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/6",
+              "displayName": "categories/6",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Orthopedic surgeon",
+                  "value": "Orthopedic surgeon"
+                },
+                {
+                  "name": "Periodontist",
+                  "value": "Periodontist"
+                },
+                {
+                  "name": "Endodontist",
+                  "value": "Endodontist"
+                },
+                {
+                  "name": "Weight loss service",
+                  "value": "Weight loss service"
+                },
+                {
+                  "name": "Orthodontist",
+                  "value": "Orthodontist"
+                },
+                {
+                  "name": "Wellness center",
+                  "value": "Wellness center"
+                },
+                {
+                  "name": "Hospital",
+                  "value": "Hospital"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/7",
+              "displayName": "categories/7",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/8",
+              "displayName": "categories/8",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Surgeon",
+                  "value": "Surgeon"
+                },
+                {
+                  "name": "Periodontist",
+                  "value": "Periodontist"
+                },
+                {
+                  "name": "Prosthodontist",
+                  "value": "Prosthodontist"
+                },
+                {
+                  "name": "Pediatric dentist",
+                  "value": "Pediatric dentist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/9",
+              "displayName": "categories/9",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Surgical oncologist",
+                  "value": "Surgical oncologist"
+                },
+                {
+                  "name": "Prosthodontist",
+                  "value": "Prosthodontist"
+                },
+                {
+                  "name": "Teeth whitening service",
+                  "value": "Teeth whitening service"
+                },
+                {
+                  "name": "Periodontist",
+                  "value": "Periodontist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categoryName",
+              "displayName": "categoryName",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Medical office",
+                  "value": "Medical office"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Plastic surgeon",
+                  "value": "Plastic surgeon"
+                },
+                {
+                  "name": "Dermatologist",
+                  "value": "Dermatologist"
+                },
+                {
+                  "name": "Doctor",
+                  "value": "Doctor"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Dental clinic",
+                  "value": "Dental clinic"
+                },
+                {
+                  "name": "Specialized clinic",
+                  "value": "Specialized clinic"
+                },
+                {
+                  "name": "Cosmetic surgeon",
+                  "value": "Cosmetic surgeon"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                },
+                {
+                  "name": "Dentist",
+                  "value": "Dentist"
+                },
+                {
+                  "name": "Cosmetic dentist",
+                  "value": "Cosmetic dentist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Data2",
+              "displayName": "Data2",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Analysis Status",
+              "displayName": "Analysis Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Analyzing",
+                  "value": "Analyzing"
+                },
+                {
+                  "name": "Analyzed",
+                  "value": "Analyzed"
+                },
+                {
+                  "name": "Email Generated",
+                  "value": "Email Generated"
+                },
+                {
+                  "name": "Error",
+                  "value": "Error"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recommended Service",
+              "displayName": "Recommended Service",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Website Score",
+              "displayName": "Website Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "id": "648a8779-4788-4af1-90d8-81048b155086",
+      "name": "14b - Mark No Verified Contacts",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        320
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $('12 - AI Email Generator').first().json.output[0].content[0].text.subject }}",
+        "emailType": "text",
+        "message": "= {{ $('12 - AI Email Generator').first().json.output[0].content[0].text.emailBody }}",
+        "options": {
+          "appendAttribution": false,
+          "bccList": "sham1309kumar@gmail.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2384,
+        128
+      ],
+      "id": "1329342c-444a-4a3e-8719-5883e03c2267",
+      "name": "Send a message",
+      "webhookId": "44298e1f-d363-41bb-ae88-2631af8a83b8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "W5sjxWoGQHX4LONP",
+          "name": "Gmail account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblHOsYfcKQstvFss",
+          "mode": "list",
+          "cachedResultName": "Data",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblHOsYfcKQstvFss"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('06 - Group, Dedup & Route').first().json.recordId }}",
+            "Analysis Status": "Email Generated"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "totalScore",
+              "displayName": "totalScore",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "reviewsCount",
+              "displayName": "reviewsCount",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "street",
+              "displayName": "street",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Huai Khwang",
+                  "value": "Huai Khwang"
+                },
+                {
+                  "name": "Bang Rak",
+                  "value": "Bang Rak"
+                },
+                {
+                  "name": "Pathum Wan",
+                  "value": "Pathum Wan"
+                },
+                {
+                  "name": "Khlong Toei",
+                  "value": "Khlong Toei"
+                },
+                {
+                  "name": "Watthana",
+                  "value": "Watthana"
+                },
+                {
+                  "name": "Chatuchak",
+                  "value": "Chatuchak"
+                },
+                {
+                  "name": "Dusit District",
+                  "value": "Dusit District"
+                },
+                {
+                  "name": "Wang Thonglang",
+                  "value": "Wang Thonglang"
+                },
+                {
+                  "name": "Bang Na",
+                  "value": "Bang Na"
+                },
+                {
+                  "name": "Bangkok Noi",
+                  "value": "Bangkok Noi"
+                },
+                {
+                  "name": "ปทุมวัน",
+                  "value": "ปทุมวัน"
+                },
+                {
+                  "name": "Din Daeng",
+                  "value": "Din Daeng"
+                },
+                {
+                  "name": "เขต คลองด",
+                  "value": "เขต คลองด"
+                },
+                {
+                  "name": "Amphoe Mueng",
+                  "value": "Amphoe Mueng"
+                },
+                {
+                  "name": "Mueang Phuket District",
+                  "value": "Mueang Phuket District"
+                },
+                {
+                  "name": "อ.เมือง",
+                  "value": "อ.เมือง"
+                },
+                {
+                  "name": "เมือง",
+                  "value": "เมือง"
+                },
+                {
+                  "name": "Muang",
+                  "value": "Muang"
+                },
+                {
+                  "name": "อ.เมืองเชียงใหม่",
+                  "value": "อ.เมืองเชียงใหม่"
+                },
+                {
+                  "name": "Mueng",
+                  "value": "Mueng"
+                },
+                {
+                  "name": "Kathu District",
+                  "value": "Kathu District"
+                },
+                {
+                  "name": "Mueang Chiang Mai District",
+                  "value": "Mueang Chiang Mai District"
+                },
+                {
+                  "name": "Thalang District",
+                  "value": "Thalang District"
+                },
+                {
+                  "name": "Phuket",
+                  "value": "Phuket"
+                },
+                {
+                  "name": "Bang Kapi",
+                  "value": "Bang Kapi"
+                },
+                {
+                  "name": "Muang เมือง",
+                  "value": "Muang เมือง"
+                },
+                {
+                  "name": "New York",
+                  "value": "New York"
+                },
+                {
+                  "name": "Subdistrict",
+                  "value": "Subdistrict"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Bangkok",
+                  "value": "Bangkok"
+                },
+                {
+                  "name": "Chiang Mai",
+                  "value": "Chiang Mai"
+                },
+                {
+                  "name": "Phuket",
+                  "value": "Phuket"
+                },
+                {
+                  "name": "New York",
+                  "value": "New York"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "countryCode",
+              "displayName": "countryCode",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "TH",
+                  "value": "TH"
+                },
+                {
+                  "name": "US",
+                  "value": "US"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "website",
+              "displayName": "website",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/0",
+              "displayName": "categories/0",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Medical office",
+                  "value": "Medical office"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Plastic surgeon",
+                  "value": "Plastic surgeon"
+                },
+                {
+                  "name": "Dermatologist",
+                  "value": "Dermatologist"
+                },
+                {
+                  "name": "Doctor",
+                  "value": "Doctor"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Dental clinic",
+                  "value": "Dental clinic"
+                },
+                {
+                  "name": "Specialized clinic",
+                  "value": "Specialized clinic"
+                },
+                {
+                  "name": "Cosmetic surgeon",
+                  "value": "Cosmetic surgeon"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                },
+                {
+                  "name": "Dentist",
+                  "value": "Dentist"
+                },
+                {
+                  "name": "Cosmetic dentist",
+                  "value": "Cosmetic dentist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/1",
+              "displayName": "categories/1",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Bariatric surgeon",
+                  "value": "Bariatric surgeon"
+                },
+                {
+                  "name": "Cosmetic surgeon",
+                  "value": "Cosmetic surgeon"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Hospital",
+                  "value": "Hospital"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Dermatologist",
+                  "value": "Dermatologist"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                },
+                {
+                  "name": "Plastic surgeon",
+                  "value": "Plastic surgeon"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Cosmetic dentist",
+                  "value": "Cosmetic dentist"
+                },
+                {
+                  "name": "Beauty salon",
+                  "value": "Beauty salon"
+                },
+                {
+                  "name": "Laser hair removal service",
+                  "value": "Laser hair removal service"
+                },
+                {
+                  "name": "Facial spa",
+                  "value": "Facial spa"
+                },
+                {
+                  "name": "Hair removal service",
+                  "value": "Hair removal service"
+                },
+                {
+                  "name": "Anesthesiologist",
+                  "value": "Anesthesiologist"
+                },
+                {
+                  "name": "Esthetics service",
+                  "value": "Esthetics service"
+                },
+                {
+                  "name": "Physical therapy clinic",
+                  "value": "Physical therapy clinic"
+                },
+                {
+                  "name": "Doctor",
+                  "value": "Doctor"
+                },
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Wellness center",
+                  "value": "Wellness center"
+                },
+                {
+                  "name": "Denture care center",
+                  "value": "Denture care center"
+                },
+                {
+                  "name": "Medical spa",
+                  "value": "Medical spa"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/2",
+              "displayName": "categories/2",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Cardiovascular and thoracic surgeon",
+                  "value": "Cardiovascular and thoracic surgeon"
+                },
+                {
+                  "name": "Dermatologist",
+                  "value": "Dermatologist"
+                },
+                {
+                  "name": "Specialized hospital",
+                  "value": "Specialized hospital"
+                },
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Wellness center",
+                  "value": "Wellness center"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Laser hair removal service",
+                  "value": "Laser hair removal service"
+                },
+                {
+                  "name": "Hair removal service",
+                  "value": "Hair removal service"
+                },
+                {
+                  "name": "Dental implants periodontist",
+                  "value": "Dental implants periodontist"
+                },
+                {
+                  "name": "Doctor",
+                  "value": "Doctor"
+                },
+                {
+                  "name": "Weight loss service",
+                  "value": "Weight loss service"
+                },
+                {
+                  "name": "IV therapy service",
+                  "value": "IV therapy service"
+                },
+                {
+                  "name": "Dental implants provider",
+                  "value": "Dental implants provider"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                },
+                {
+                  "name": "Travel clinic",
+                  "value": "Travel clinic"
+                },
+                {
+                  "name": "Skin care products vending machine",
+                  "value": "Skin care products vending machine"
+                },
+                {
+                  "name": "Dental clinic",
+                  "value": "Dental clinic"
+                },
+                {
+                  "name": "Esthetics service",
+                  "value": "Esthetics service"
+                },
+                {
+                  "name": "Endodontist",
+                  "value": "Endodontist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/3",
+              "displayName": "categories/3",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Gastrointestinal surgeon",
+                  "value": "Gastrointestinal surgeon"
+                },
+                {
+                  "name": "Vascular surgeon",
+                  "value": "Vascular surgeon"
+                },
+                {
+                  "name": "Surgeon",
+                  "value": "Surgeon"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Laser hair removal service",
+                  "value": "Laser hair removal service"
+                },
+                {
+                  "name": "Dentist",
+                  "value": "Dentist"
+                },
+                {
+                  "name": "Wellness center",
+                  "value": "Wellness center"
+                },
+                {
+                  "name": "Medical Center",
+                  "value": "Medical Center"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Endodontist",
+                  "value": "Endodontist"
+                },
+                {
+                  "name": "Orthodontist",
+                  "value": "Orthodontist"
+                },
+                {
+                  "name": "Dental implants periodontist",
+                  "value": "Dental implants periodontist"
+                },
+                {
+                  "name": "Dental radiology",
+                  "value": "Dental radiology"
+                },
+                {
+                  "name": "Medical office",
+                  "value": "Medical office"
+                },
+                {
+                  "name": "Esthetics service",
+                  "value": "Esthetics service"
+                },
+                {
+                  "name": "Denture care center",
+                  "value": "Denture care center"
+                },
+                {
+                  "name": "Dental implants provider",
+                  "value": "Dental implants provider"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/4",
+              "displayName": "categories/4",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Hospital department",
+                  "value": "Hospital department"
+                },
+                {
+                  "name": "Weight loss service",
+                  "value": "Weight loss service"
+                },
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Medical Center",
+                  "value": "Medical Center"
+                },
+                {
+                  "name": "Endodontist",
+                  "value": "Endodontist"
+                },
+                {
+                  "name": "Denture care center",
+                  "value": "Denture care center"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Medical spa",
+                  "value": "Medical spa"
+                },
+                {
+                  "name": "Orthodontist",
+                  "value": "Orthodontist"
+                },
+                {
+                  "name": "Teeth whitening service",
+                  "value": "Teeth whitening service"
+                },
+                {
+                  "name": "Dentist",
+                  "value": "Dentist"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/5",
+              "displayName": "categories/5",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/6",
+              "displayName": "categories/6",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Orthopedic surgeon",
+                  "value": "Orthopedic surgeon"
+                },
+                {
+                  "name": "Periodontist",
+                  "value": "Periodontist"
+                },
+                {
+                  "name": "Endodontist",
+                  "value": "Endodontist"
+                },
+                {
+                  "name": "Weight loss service",
+                  "value": "Weight loss service"
+                },
+                {
+                  "name": "Orthodontist",
+                  "value": "Orthodontist"
+                },
+                {
+                  "name": "Wellness center",
+                  "value": "Wellness center"
+                },
+                {
+                  "name": "Hospital",
+                  "value": "Hospital"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/7",
+              "displayName": "categories/7",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/8",
+              "displayName": "categories/8",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Surgeon",
+                  "value": "Surgeon"
+                },
+                {
+                  "name": "Periodontist",
+                  "value": "Periodontist"
+                },
+                {
+                  "name": "Prosthodontist",
+                  "value": "Prosthodontist"
+                },
+                {
+                  "name": "Pediatric dentist",
+                  "value": "Pediatric dentist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categories/9",
+              "displayName": "categories/9",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Surgical oncologist",
+                  "value": "Surgical oncologist"
+                },
+                {
+                  "name": "Prosthodontist",
+                  "value": "Prosthodontist"
+                },
+                {
+                  "name": "Teeth whitening service",
+                  "value": "Teeth whitening service"
+                },
+                {
+                  "name": "Periodontist",
+                  "value": "Periodontist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "categoryName",
+              "displayName": "categoryName",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Surgical center",
+                  "value": "Surgical center"
+                },
+                {
+                  "name": "Medical office",
+                  "value": "Medical office"
+                },
+                {
+                  "name": "Plastic surgery clinic",
+                  "value": "Plastic surgery clinic"
+                },
+                {
+                  "name": "Plastic surgeon",
+                  "value": "Plastic surgeon"
+                },
+                {
+                  "name": "Dermatologist",
+                  "value": "Dermatologist"
+                },
+                {
+                  "name": "Doctor",
+                  "value": "Doctor"
+                },
+                {
+                  "name": "Skin care clinic",
+                  "value": "Skin care clinic"
+                },
+                {
+                  "name": "Medical clinic",
+                  "value": "Medical clinic"
+                },
+                {
+                  "name": "Dental clinic",
+                  "value": "Dental clinic"
+                },
+                {
+                  "name": "Specialized clinic",
+                  "value": "Specialized clinic"
+                },
+                {
+                  "name": "Cosmetic surgeon",
+                  "value": "Cosmetic surgeon"
+                },
+                {
+                  "name": "Health and beauty shop",
+                  "value": "Health and beauty shop"
+                },
+                {
+                  "name": "Dentist",
+                  "value": "Dentist"
+                },
+                {
+                  "name": "Cosmetic dentist",
+                  "value": "Cosmetic dentist"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Data2",
+              "displayName": "Data2",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Analysis Status",
+              "displayName": "Analysis Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Analyzing",
+                  "value": "Analyzing"
+                },
+                {
+                  "name": "Analyzed",
+                  "value": "Analyzed"
+                },
+                {
+                  "name": "Email Generated",
+                  "value": "Email Generated"
+                },
+                {
+                  "name": "Error",
+                  "value": "Error"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "id": "29dd36d2-f0d2-41cd-b57f-3e3dd70743c4",
+      "name": "14 - Update Company Status1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        2448,
+        304
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "email": "={{ $('07 - Route Company').first().json.recipientEmailArray[0] }}",
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-emailvalidation.emailValidation",
+      "typeVersion": 1,
+      "position": [
+        1936,
+        128
+      ],
+      "id": "1e1b7b4b-a57c-484a-b87e-e72447b947ab",
+      "name": "EmailValidation",
+      "credentials": {
+        "emailValidationApi": {
+          "id": "RMcMvR0jUi1uq7u9",
+          "name": "EmailValidation account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6936c43a-5075-4762-832c-c63a0a294d2e",
+              "leftValue": "={{ $json.format_valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2160,
+        128
+      ],
+      "id": "d4483db4-9a82-4942-bc78-34e161840d69",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appE5P0JkM9zx9XM6",
+          "mode": "list",
+          "cachedResultName": "Thailand",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblZ2McIdL3VrhmLC",
+          "mode": "list",
+          "cachedResultName": "Email Messages",
+          "cachedResultUrl": "https://airtable.com/appE5P0JkM9zx9XM6/tblZ2McIdL3VrhmLC"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('13 - Save Email Draft').item.json.id }}",
+            "Subject": "={{ $('13 - Save Email Draft').item.json.fields.Subject }}",
+            "Company": "={{ $('13 - Save Email Draft').item.json.fields.Company }}",
+            "Email Body": "={{ $('12 - AI Email Generator').item.json.output[0].content[0].text.emailBody }}",
+            "Lead": "={{ $('13 - Save Email Draft').item.json.fields.Lead }}",
+            "Recipient Email": "={{ $('EmailValidation').item.json.email }}",
+            "Status": "Sent"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lead",
+              "displayName": "Lead",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Analysis",
+              "displayName": "Analysis",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recipient Email",
+              "displayName": "Recipient Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email Body",
+              "displayName": "Email Body",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recommended Service",
+              "displayName": "Recommended Service",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Draft",
+                  "value": "Draft"
+                },
+                {
+                  "name": "Sent",
+                  "value": "Sent"
+                },
+                {
+                  "name": "Scheduled",
+                  "value": "Scheduled"
+                },
+                {
+                  "name": "Failed",
+                  "value": "Failed"
+                },
+                {
+                  "name": "Opened",
+                  "value": "Opened"
+                },
+                {
+                  "name": "Clicked",
+                  "value": "Clicked"
+                },
+                {
+                  "name": "Bounced",
+                  "value": "Bounced"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Sent At",
+              "displayName": "Sent At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Follow-up Recommendations (AI)",
+              "displayName": "Follow-up Recommendations (AI)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Outcome Summary (AI)",
+              "displayName": "Outcome Summary (AI)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Response Quality (AI)",
+              "displayName": "Response Quality (AI)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "No Response",
+                  "value": "No Response"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "High",
+                  "value": "High"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "b406de77-ffec-4d1b-aa7c-615c37ed1284",
+      "name": "14b - Mark No Verified Contacts1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        2896,
+        128
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xyiVk4kQumb3uzHE",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function normTitle(s){ return (s||'').toString().toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().replace(/\\s+/g,' '); }\nfunction normKey(s){ return normTitle(s).replace(/ /g,''); }\nfunction normSite(u){ let s=(u||'').toString().toLowerCase().trim(); s=s.replace(/^https?:\\/\\//,''); s=s.replace(/^www\\./,''); s=s.split('/')[0]; s=s.replace(/[^a-z0-9.]+/g,''); return s; }\n\nconst companies = $('03 - Filter Valid Companies').all();\nconst rawContacts = $('04 - Get Contacts - Data2').all();\nconst existingEmails = $('E1 - Existing Emails').all();\nconst existingAnalyses = $('E2 - Existing Analyses').all();\n\nconst emailTitleSet = new Set();\nconst emailKeySet = new Set();\nfor (const r of existingEmails){ \n  const f = (r.json && r.json.fields) ? r.json.fields : (r.json||{}); \n  if(f && f.Company) emailTitleSet.add(normTitle(f.Company)); \n  if(f && f['Company Key']) emailKeySet.add(String(f['Company Key']).toLowerCase()); \n}\n\nconst analysisTitleSet = new Set();\nconst analysisKeySet = new Set();\nfor (const r of existingAnalyses){ \n  const f = (r.json && r.json.fields) ? r.json.fields : (r.json||{}); \n  if(f && f.Company) analysisTitleSet.add(normTitle(f.Company)); \n  if(f && f['Company Key']) analysisKeySet.add(String(f['Company Key']).toLowerCase()); \n}\n\nconst contactsByTitle = {};\nconst sentCompaniesSet = new Set();\n\nfor (const c of rawContacts){\n  const f = (c.json && c.json.fields) ? c.json.fields : (c.json||{});\n  if(!f || Object.keys(f).length===0) continue;\n  \n  const email = (f.email||'').toString().trim();\n  const isVerified = f.emailVerification === true || String(f.emailVerification).toLowerCase() === 'true';\n  const readyRaw = f['ready to send the message'];\n  const isReadyToSend = readyRaw === true || String(readyRaw).toLowerCase() === 'true';\n  \n  const messageSentRaw = f['message sent'] != null ? f['message sent'] : f.sent;\n  const isMessageSent = messageSentRaw === true || String(messageSentRaw).toLowerCase() === 'true';\n  \n  // FIX 1: Match on Company Name rather than Contact Job Title\n  const companyName = f.company || f.companyName || f['Company Name'] || f.title || '';\n  const key = normTitle(companyName);\n  if(!key) continue;\n\n  // Track if this company already had ANY message sent\n  if(isMessageSent) {\n    sentCompaniesSet.add(key);\n    continue; \n  }\n  \n  if(!email || !isVerified || !isReadyToSend) continue;\n  \n  if(!contactsByTitle[key]) contactsByTitle[key] = [];\n  \n  const full = f.fullName || ((f.firstName||'') + ' ' + (f.lastName||'')).trim();\n\n  contactsByTitle[key].push({ \n    firstName: f.firstName || '', \n    lastName: f.lastName || '', \n    fullName: full, \n    email: email,\n    isVerified: isVerified,\n    isReadyToSend: isReadyToSend,\n    messageSent: isMessageSent\n  });\n}\n\nconst seen = {};\nconst out = [];\n\nfor (const comp of companies){\n  const f = (comp.json && comp.json.fields) ? comp.json.fields : (comp.json||{});\n  const title = f.title || '';\n  const website = f.website || '';\n  const tkey = normTitle(title);\n  const ckey = normKey(title) + '|' + normSite(website);\n  const providedKey = f['Company Key'] ? String(f['Company Key']).toLowerCase() : '';\n  \n  if(seen[ckey]) continue;\n  seen[ckey] = true;\n\n  const list = contactsByTitle[tkey] || [];\n  const isAlreadySent = sentCompaniesSet.has(tkey);\n  \n  const emailList = list.map(function(p){ return p.email; }).filter(Boolean);\n  const recipientEmails = emailList.join(', ');\n  const recipientsText = list.map(function(p){ return (p.fullName||'').trim() + ' <' + p.email + '>'; }).join('\\n');\n  const status = (f['Analysis Status']||'').toString();\n\n  const emailExists = emailTitleSet.has(tkey) || (providedKey && emailKeySet.has(providedKey)) || emailKeySet.has(ckey);\n  const analysisExists = analysisTitleSet.has(tkey) || (providedKey && analysisKeySet.has(providedKey)) || analysisKeySet.has(ckey);\n  const statusDone = status === 'Email Generated';\n\n  let route = 'full';\n  let skipReason = '';\n\n  // ROUTING LOGIC\n  if(isAlreadySent){\n    route = 'no_contacts';\n    skipReason = 'Already sent (message sent field is true)';\n  } else if(list.length === 0){ \n    route = 'no_contacts'; \n    skipReason = 'No verified contacts found'; \n  } else if(emailExists){ \n    route = 'skip'; \n    skipReason = 'Email already exists'; \n  } else if(statusDone){ \n    route = 'skip'; \n    skipReason = 'Status Email Generated'; \n  } else if(analysisExists){ \n    route = 'skip'; \n    skipReason = 'Analysis already exists'; \n  }\n\n  const safeTitle = title.replace(/\"/g,'');\n  const emailLookupFormula = 'LOWER({Company}) = \"' + safeTitle.toLowerCase() + '\"';\n\n  out.push({ json: {\n    recordId: comp.json.id,\n    company: title,\n    companyKey: ckey,\n    normTitle: tkey,\n    website: website,\n    category: f.categoryName || f['categories/0'] || '',\n    city: f.city || '',\n    state: f.state || '',\n    rating: f.totalScore != null ? f.totalScore : null,\n    reviews: f.reviewsCount != null ? f.reviewsCount : null,\n    url: f.url || '',\n    contacts: list,\n    recipientCount: list.length,\n    recipientsText: recipientsText,\n    recipientEmails: recipientEmails,\n    recipientEmailArray: emailList,\n    hasContacts: list.length > 0,\n    route: route,\n    skipReason: skipReason,\n    emailLookupFormula: emailLookupFormula\n  }});\n}\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        320
+      ],
+      "id": "8cef8293-f187-45b5-ba39-9e9ce1fbef61",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "01 - Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "02 - Get Companies - Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 - Get Companies - Data": {
+      "main": [
+        [
+          {
+            "node": "03 - Filter Valid Companies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "00a - New Company (Data)": {
+      "main": [
+        [
+          {
+            "node": "02 - Get Companies - Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "00b - Verified Contact (Data2)": {
+      "main": [
+        [
+          {
+            "node": "02 - Get Companies - Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 - Filter Valid Companies": {
+      "main": [
+        [
+          {
+            "node": "04 - Get Contacts - Data2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 - Get Contacts - Data2": {
+      "main": [
+        [
+          {
+            "node": "E1 - Existing Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "E1 - Existing Emails": {
+      "main": [
+        [
+          {
+            "node": "E2 - Existing Analyses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "E2 - Existing Analyses": {
+      "main": [
+        [
+          {
+            "node": "07 - Route Company",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 - Route Company": {
+      "main": [
+        [
+          {
+            "node": "08 - Fetch Website",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Already Processed - Skip",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "14b - Mark No Verified Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "08 - Fetch Website": {
+      "main": [
+        [
+          {
+            "node": "09 - Extract Website Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "09 - Extract Website Content": {
+      "main": [
+        [
+          {
+            "node": "10 - AI Website Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10 - AI Website Analysis": {
+      "main": [
+        [
+          {
+            "node": "11 - Save Website Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "11 - Save Website Analysis": {
+      "main": [
+        [
+          {
+            "node": "F1 - Recheck Existing Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "F1 - Recheck Existing Email": {
+      "main": [
+        [
+          {
+            "node": "F2 - Final Duplicate Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "F2 - Final Duplicate Gate": {
+      "main": [
+        [
+          {
+            "node": "12 - AI Email Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "12 - AI Email Generator": {
+      "main": [
+        [
+          {
+            "node": "13 - Save Email Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "13 - Save Email Draft": {
+      "main": [
+        [
+          {
+            "node": "EmailValidation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "14b - Mark No Verified Contacts1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EmailValidation": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "14 - Update Company Status1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "07 - Route Company",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b9b07d59-8cc2-40e2-a0a4-7eebe7ee1ce1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "44100f71a1aea8f938cea18de628142e02c929638f51121568ed01ec44d99e16"
+  },
+  "nodeGroups": [
+    {
+      "id": "6b587df5-97fa-4ded-b16c-0afc1ef101d1",
+      "name": "Ingest, Dedup & Route",
+      "nodeIds": [
+        "82e163f0-03da-4aaf-a67d-78a37bf524f0",
+        "70c75d4f-cdee-4e08-bf8a-ccadce245052",
+        "fc915c5d-0382-4371-a0f4-beecac16e9a5",
+        "aacc174e-24ae-4b13-8ec9-8f86830b7a87",
+        "0c9f4154-ab14-4935-9580-bd4525f3b081",
+        "fe2b9f0f-b5c8-46dc-ae4c-1a58c7866a5c",
+        "8cef8293-f187-45b5-ba39-9e9ce1fbef61"
+      ],
+      "description": "Read companies and contacts, load existing emails and analyses, deduplicate to one item per company, and route each company to full analysis, ski"
+    }
+  ],
+  "id": "dk8qCsZjfApgXLNj",
+  "tags": []
+}
